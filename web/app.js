@@ -32,7 +32,7 @@ const T = {
   all:'All',ver:'Verified',pen:'Pending',dis:'Disputed',confirm:'I saw it too',dispute:'Not accurate',conf:'confirmations',reports:'reports',verified:'verified',pending:'pending',
   ago:'',h:'h ago',d:'d ago',voted:'Vote recorded',blockedText:'Personal data was removed from the text'}
 };
-let lang = localStorage.getItem('rasd.lang') || 'ar';
+let lang = localStorage.getItem('rasd.lang') || (/^ar/i.test(navigator.language||'ar')?'ar':'en'); // first visit follows the browser language
 const t = k => T[lang][k];
 const COL = {road:'#FFB020',safety:'#FF5C6C',utilities:'#60A5FA',environment:'#34D399',misconduct:'#C084FC',other:'#93A1BD'};
 const KEY = 'rasd.v1';

@@ -62,6 +62,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    if(process.env.SHOT)await pg.screenshot({path:`/tmp/qa-${name}-${lang}.png`});
    await ctx.close();
   }}
+ {const c=await b.createBrowserContext(),pg=await c.newPage();await pg.evaluateOnNewDocument(()=>Object.defineProperty(navigator,'language',{get:()=>'fr-FR'}));await pg.goto('http://localhost:8123/');await sleep(500);ok(await pg.evaluate(()=>document.documentElement.lang)==='en','non-Arabic browser defaults to English');await c.close();}
  await b.close();srv.close();
  console.log(fails.length?'FAILED '+fails.length:'ALL QA PASSED');process.exit(fails.length?1:0);
 })();
