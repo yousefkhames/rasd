@@ -4,12 +4,29 @@
   "description": "Anonymous, community-verified incident reporting",
   "scripts": {
     "test": "node test-core.js && node server/test.js",
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "test:e2e": "node tests/e2e.js"
   },
-  "keywords": [],
+  "keywords": [
+    "civic-tech",
+    "anonymous",
+    "privacy",
+    "leaflet",
+    "pwa",
+    "arabic",
+    "rtl",
+    "incident-reporting"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "leaflet": "1.9.4"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yousefkhames/rasd.git"
   }
 }
