@@ -81,7 +81,7 @@ function render(){
   $('#stats').innerHTML=`<div><b>${nf(all.length)}</b>${t('reports')}</div><div><b>${nf(v)}</b>${t('verified')}</div><div><b>${nf(all.length-v)}</b>${t('pending')}</div>`;
   $('#list').innerHTML=list.map(i=>{const s=C.status(i),sc=C.score(i),b={verified:['b-ver',t('ver')],pending:['b-pen',t('pen')],disputed:['b-dis',t('dis')],resolved:['b-res',t('res')],hidden:['b-dis',t('review')]}[s];
    const mine=db.mine[i.id]?.vote;
-   return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${i.img?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
+   return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(i.img||'')?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
    <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${nf(sc.conf)} ${t('conf')} · ${ago(i.ts)}</span></div>
    <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button><button class="sm" data-v="r" data-id="${i.id}" ${db.mine[i.id]?.res?'disabled':''}>${t('resolveB')}</button><button class="sm" data-v="f" data-id="${i.id}" ${db.mine[i.id]?.flag?'disabled':''}>⚑ ${t('flagB')}</button></div></article>`}).join('');
@@ -165,7 +165,7 @@ const _al=applyLang;applyLang=function(){_al();modeLabel();};
 $('#exp').onclick=()=>{const b=new Blob([JSON.stringify({v:1,db},null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='rasd-data.json';a.click();};
 $('#imp').onclick=()=>$('#impF').click();
 $('#impF').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());if(!j.db||!Array.isArray(j.db.incidents))throw 0;
-  j.db.incidents.forEach(i=>{if(typeof i.text!=='string'||!C.CATS.includes(i.cat)||!isFinite(i.lat)||!isFinite(i.lng))throw 0;});db=j.db;save();render();}catch{alert(t('impBad'))}};
+  j.db.incidents.forEach(i=>{i.sev=[0,1,2].includes(i.sev)?i.sev:1;i.confirms=Array.isArray(i.confirms)?i.confirms.map(String):[];i.disputes=Array.isArray(i.disputes)?i.disputes.map(String):[];if(typeof i.text!=='string'||!C.CATS.includes(i.cat)||!isFinite(i.lat)||!isFinite(i.lng))throw 0;});db=j.db;save();render();}catch{alert(t('impBad'))}};
 $('#wipe').onclick=()=>{if(confirm(t('wipeQ'))){['rasd.v1','rasd.token','rasd.last'].forEach(k=>localStorage.removeItem(k));location.reload();}};
 async function api(path,opt){const r=await fetch(API+path,{...opt,headers:{'content-type':'application/json'}});if(!r.ok)throw r.status;return r.json();}
 const fromApi=x=>({id:x.id,cat:x.cat,lat:x.lat,lng:x.lng,text:x.text,ts:x.ts,sev:x.sev,photo:x.photo,confirms:Array(x.nconf).fill('s'),disputes:Array(x.ndis).fill('s'),resolves:Array(x.nres).fill('s'),flags:Array(x.nflag).fill('s')});

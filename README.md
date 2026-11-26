@@ -14,9 +14,12 @@ Anonymous, community-verified incident reporting for streets and neighborhoods (
 ## Verification
 `score = 1 + confirmations + (photo ? 1 : 0) - 1.5 * disputes`. At 3 the report is **verified**. 3+ disputes beating confirmations marks it **disputed**.
 
+## Features
+Arabic-first RTL + English, mobile-first (map/list tabs), search/sort/filter, severity, confirm/dispute/resolved votes, abuse flags with auto-hide, receipt-code tracking, installable PWA with offline shell, data export/import/erase, optional live API mode (`?api=https://your-server`), accessibility (skip link, ARIA, focus rings, reduced motion).
+
 ## Run
 - Static demo (local-first, data kept in the browser): serve `docs/` (live on GitHub Pages).
-- API: `node server/server.js` (zero dependencies), tests: `node server/test.js`.
+- API: `node server/server.js` (zero dependencies), tests: `npm test`. Point the UI at a server with `?api=http://localhost:8787`.
 
 ## Limits (honest)
 Anonymous voting can be gamed by one person with many devices. Next steps: proof-of-work per vote, geofenced voting ("I am near this"), moderator review for disputed reports. Not a replacement for emergency services.
