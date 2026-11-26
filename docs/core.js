@@ -2,6 +2,7 @@
 (function (root) {
   const GRID = 0.005; // ~500 m cells: precise enough to be useful, too coarse to find a doorstep
   const VERIFY_AT = 3;
+  const SEV = ['low', 'medium', 'high'];
   const CATS = ['road', 'safety', 'utilities', 'environment', 'misconduct', 'other'];
 
   function blur(lat, lng) {
@@ -27,6 +28,8 @@
     return { conf, dis, value: 1 + conf + (i.photo ? 1 : 0) - 1.5 * dis };
   }
   function status(i) {
+    if ((i.flags || []).length >= 3) return 'hidden'; // abuse flags: hidden pending review
+    if ((i.resolves || []).length >= 3) return 'resolved';
     const s = score(i);
     if (s.dis >= 3 && s.dis > s.conf) return 'disputed';
     return s.value >= VERIFY_AT ? 'verified' : 'pending';
@@ -42,6 +45,6 @@
     const d = await c.subtle.digest('SHA-256', new TextEncoder().encode(s));
     return Array.from(new Uint8Array(d), x => x.toString(16).padStart(2, '0')).join('');
   }
-  const api = { GRID, VERIFY_AT, CATS, blur, hourBucket, scrub, score, status, randomCode, sha256 };
+  const api = { SEV, GRID, VERIFY_AT, CATS, blur, hourBucket, scrub, score, status, randomCode, sha256 };
   if (typeof module !== 'undefined') module.exports = api; else root.RasdCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

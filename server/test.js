@@ -12,6 +12,11 @@ server.listen(0, async () => {
   [s, r] = await post(`/api/incidents/${id}/confirm`, { token: 'device-token-number-9' }); assert.equal(r.status, 'verified');
   [s, r] = await j('/api/track/' + code); assert.equal(s, 200); assert.equal(r.id, id);
   assert(!require('fs').readFileSync('/tmp/rasd-test.json', 'utf8').includes(code), 'plain code must not be stored');
+  for (let k = 0; k < 3; k++) await post(`/api/incidents/${id}/resolve`, { token: 'resolver-token-number-' + k });
+  [s, r] = await j('/api/incidents'); assert.equal(r[0].status, 'resolved');
+  [s, r] = await post('/api/incidents', { cat: 'road', lat: 31.2, lng: 29.9, text: 'Abusive entry here' }); const bad = r.incident.id;
+  for (let k = 0; k < 3; k++) await post(`/api/incidents/${bad}/flag`, { token: 'flagger-token-number-' + k });
+  [s, r] = await j('/api/incidents'); assert.equal(r.find(x => x.id === bad).status, 'hidden');
   [s] = await post('/api/incidents', { cat: 'x' }); assert.equal(s, 400);
   console.log('all tests passed'); server.close();
 });
