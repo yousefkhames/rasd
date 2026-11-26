@@ -1,7 +1,7 @@
 const C = window.RasdCore;
 const $ = s => document.querySelector(s);
 const T = {
- ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',tMap:'الخريطة',tList:'القايمة',reportPlus:'+ بلّغ',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
+ ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',tMap:'الخريطة',tList:'القايمة',reportPlus:'+ بلّغ',search:'دوّر في البلاغات',sortL:'ترتيب',sNew:'الأحدث',sConf:'الأكثر تأكيداً',sVer:'المؤكّد أولاً',geo:'📍 حدّد منطقتي (بالضغط فقط)',geoFail:'تعذّر تحديد موقعك. اضغط على الخريطة.',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
   sub:'رصد منصة بلاغات مجهولة للمشاكل في الشارع والحي. مفيش حساب ولا رقم تليفون ولا موقعك الدقيق. الثقة بتيجي من تأكيد ناس تانية مش من هويتك.',
   p1:'من غير حساب',p2:'الموقع مموّه ~500م',p3:'الصور بتتنضف من بياناتها',
   demo:'البيانات اللي على الخريطة تجريبية لعرض الفكرة. بلاغاتك هنا بتتحفظ على جهازك بس.',
@@ -14,7 +14,7 @@ const T = {
   cats:{road:'طرق وحفر',safety:'أمان الشارع',utilities:'مرافق (كهربا/مياه)',environment:'بيئة ونضافة',misconduct:'سوء سلوك أو إهمال',other:'أخرى'},
   all:'الكل',ver:'مؤكّد',pen:'قيد التأكيد',dis:'متنازع عليه',confirm:'شفته كمان',dispute:'مش صح',conf:'تأكيد',reports:'بلاغ',verified:'مؤكّد',pending:'قيد التأكيد',
   ago:'منذ',h:'ساعة',d:'يوم',voted:'سجّلنا رأيك',blockedText:'اتشال من النص بيانات شخصية'},
- en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',tMap:'Map',tList:'List',reportPlus:'+ Report',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
+ en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',tMap:'Map',tList:'List',reportPlus:'+ Report',search:'Search reports',sortL:'Sort',sNew:'Newest',sConf:'Most confirmed',sVer:'Verified first',geo:'📍 Use my area (only when you tap)',geoFail:'Could not get your location. Tap the map instead.',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
   sub:'Rasd is an anonymous reporting map for street and neighborhood problems. No account, no phone number, no exact location. Trust comes from other people confirming, not from who you are.',
   p1:'No account',p2:'Location blurred ~500 m',p3:'Photos stripped of metadata',
   demo:'Reports on the map are demo data. Your reports here are saved on your device only.',
@@ -49,7 +49,8 @@ function seed() {
 }
 let db = JSON.parse(localStorage.getItem(KEY) || 'null') || {incidents: seed(), mine: {}};
 const save = () => localStorage.setItem(KEY, JSON.stringify(db));
-let filter = 'all', map, layer, pick, pickMarker;
+let filter = 'all', query = '', sortBy = 'new', selId = null;
+let filter0 = 'all', map, layer, pick, pickMarker;
 
 function ago(ts){const h=Math.max(1,Math.round((Date.now()-ts)/3600000));return h<48?(lang==='ar'?`${t('ago')} ${h} ${t('h')}`:`${h}${t('h')}`):(lang==='ar'?`${t('ago')} ${Math.round(h/24)} ${t('d')}`:`${Math.round(h/24)}${t('d')}`);}
 function loc(s){const p=s.split(' / ');return p.length===2?(lang==='ar'?p[0]:p[1]):s;}
@@ -59,27 +60,28 @@ function applyLang(){
   $('#map').setAttribute('aria-label',lang==='ar'?'خريطة البلاغات':'Incident map');
   document.documentElement.lang=lang;document.documentElement.dir=t('dir');
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  if($('#q'))$('#q').placeholder=t('search');
   $('#btnLang').textContent=lang==='ar'?'EN':'عربي';
   $('#fCat').innerHTML=C.CATS.map(c=>`<option value="${c}">${t('cats')[c]}</option>`).join('');
   $('#how').innerHTML=t('how').map(([a,b])=>`<div><b>${a}</b><p>${b}</p></div>`).join('');
   render();
 }
 function render(){
-  const all=db.incidents, list=all.filter(i=>filter==='all'||i.cat===filter).sort((a,b)=>b.ts-a.ts);
+  const all=db.incidents, list=all.filter(i=>(filter==='all'||i.cat===filter)&&(!query||(loc(i.text)+' '+t('cats')[i.cat]).toLowerCase().includes(query))).sort(sortBy==='conf'?(a,b)=>C.score(b).conf-C.score(a).conf:sortBy==='ver'?(a,b)=>(C.status(b)==='verified')-(C.status(a)==='verified')||b.ts-a.ts:(a,b)=>b.ts-a.ts);
   $('#filters').innerHTML=['all',...C.CATS].map(c=>`<button class="chip ${c===filter?'on':''}" aria-pressed="${c===filter}" data-c="${c}">${c==='all'?t('all'):t('cats')[c]}</button>`).join('');
   $('#filters').onclick=e=>{const c=e.target.dataset.c;if(c){filter=c;render();}};
   const v=all.filter(i=>C.status(i)==='verified').length;
   $('#stats').innerHTML=`<div><b>${all.length}</b>${t('reports')}</div><div><b>${v}</b>${t('verified')}</div><div><b>${all.length-v}</b>${t('pending')}</div>`;
   $('#list').innerHTML=list.map(i=>{const s=C.status(i),sc=C.score(i),b={verified:['b-ver',t('ver')],pending:['b-pen',t('pen')],disputed:['b-dis',t('dis')]}[s];
    const mine=db.mine[i.id]?.vote;
-   return `<article class="inc"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]}</h3>${i.img?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
+   return `<article class="inc ${i.id===selId?'sel':''}" data-open="${i.id}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]}</h3>${i.img?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
    <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${sc.conf} ${t('conf')} · ${ago(i.ts)}</span></div>
    <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button></div></article>`}).join('');
-  $('#list').onclick=e=>{const b=e.target.closest('button[data-v]');if(!b)return;vote(b.dataset.id,b.dataset.v);};
+  $('#list').onclick=e=>{const b=e.target.closest('button[data-v]');if(b){vote(b.dataset.id,b.dataset.v);return;}const c=e.target.closest('[data-open]');if(c)focusInc(c.dataset.open);};
   layer.clearLayers();
   list.forEach(i=>{const s=C.status(i);
-    L.circle([i.lat,i.lng],{radius:C.GRID*111000*0.7,color:COL[i.cat],weight:s==='verified'?3:1,fillOpacity:s==='verified'?.35:.15,dashArray:s==='pending'?'4':null}).addTo(layer).bindPopup(`<b>${t('cats')[i.cat]}</b><br>${esc(i.text)}`);});
+    L.circle([i.lat,i.lng],{radius:C.GRID*111000*0.7,color:COL[i.cat],weight:s==='verified'?3:1,fillOpacity:s==='verified'?.35:.15,dashArray:s==='pending'?'4':null}).addTo(layer).on('click',()=>{selId=i.id;}).bindPopup(`<div class="pop"><b>${t('cats')[i.cat]}</b><br>${esc(i.text)}<br><button data-pv="c:${i.id}">✓ ${t('confirm')}</button><button data-pv="d:${i.id}">✗ ${t('dispute')}</button></div>`);});
 }
 function vote(id,kind){
   const i=db.incidents.find(x=>x.id===id);if(!i||db.mine[id]?.vote)return;
@@ -131,3 +133,11 @@ initMap();applyLang();
 document.body.dataset.view='map';
 function setView(v){document.body.dataset.view=v;$('#tabMap').setAttribute('aria-selected',v==='map');$('#tabList').setAttribute('aria-selected',v==='list');if(v==='map')setTimeout(()=>map.invalidateSize(),50);}
 $('#tabMap').onclick=()=>setView('map');$('#tabList').onclick=()=>setView('list');$('#fab').onclick=openReport;
+
+function focusInc(id){selId=id;const i=db.incidents.find(x=>x.id===id);if(!i)return;setView('map');map.flyTo([i.lat,i.lng],14);
+  layer.eachLayer(l=>{const ll=l.getLatLng();if(Math.abs(ll.lat-i.lat)<1e-6&&Math.abs(ll.lng-i.lng)<1e-6)l.openPopup();});render();}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-pv]');if(!b)return;const [k,id]=b.dataset.pv.split(':');vote(id,k);map.closePopup();});
+$('#q').placeholder=t('search');$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
+$('#sort').onchange=e=>{sortBy=e.target.value;render();};
+$('#geo').onclick=()=>{if(!navigator.geolocation)return alert(t('geoFail'));navigator.geolocation.getCurrentPosition(p=>{pickLL={lat:p.coords.latitude,lng:p.coords.longitude};
+  const b=C.blur(pickLL.lat,pickLL.lng);pick.setView([b.lat,b.lng],15);if(pickMarker)pickMarker.remove();pickMarker=L.rectangle([[b.lat-C.GRID/2,b.lng-C.GRID/2],[b.lat+C.GRID/2,b.lng+C.GRID/2]],{color:'#2DD4BF'}).addTo(pick);},()=>alert(t('geoFail')),{maximumAge:60000,timeout:8000});};

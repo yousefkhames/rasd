@@ -78,3 +78,9 @@ button{min-height:40px}
  .how,footer{padding-inline:14px}
 }
 @media(max-width:860px){.pillars{display:none}.hero h1{font-size:26px}}
+
+.tools{display:flex;gap:6px}.tools input{flex:1}.tools select{width:auto}
+.inc{cursor:pointer}.inc:hover,.inc.sel{border-color:var(--teal)}
+.leaflet-popup-content-wrapper{background:var(--ink2);color:var(--txt);border-radius:12px}.leaflet-popup-tip{background:var(--ink2)}
+.pop button{margin-top:6px;margin-inline-end:4px;padding:2px 10px;min-height:32px}
+#geo{margin-bottom:6px}
