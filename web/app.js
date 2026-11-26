@@ -81,7 +81,7 @@ function render(){
   $('#stats').innerHTML=`<div><b>${nf(all.length)}</b>${t('reports')}</div><div><b>${nf(v)}</b>${t('verified')}</div><div><b>${nf(all.length-v)}</b>${t('pending')}</div>`;
   $('#list').innerHTML=list.length?list.map(i=>{const s=C.status(i),sc=C.score(i),b={verified:['b-ver',t('ver')],pending:['b-pen',t('pen')],disputed:['b-dis',t('dis')],resolved:['b-res',t('res')],hidden:['b-dis',t('review')]}[s];
    const mine=db.mine[i.id]?.vote;
-   return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(i.img||'')?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
+   return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}" tabindex="0" aria-label="${t('cats')[i.cat]}: ${esc(i.text).slice(0,80)}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(i.img||'')?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
    <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${nf(sc.conf)} ${t('conf')} · ${ago(i.ts)}</span></div>
    <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button><button class="sm" data-v="r" data-id="${i.id}" ${db.mine[i.id]?.res?'disabled':''}>${t('resolveB')}</button><button class="sm" data-v="f" data-id="${i.id}" ${db.mine[i.id]?.flag?'disabled':''}>⚑ ${t('flagB')}</button></div></article>`}).join(''):`<p class="empty">${t('none')}</p>`;
@@ -154,8 +154,8 @@ document.body.dataset.view='map';
 function setView(v){document.body.dataset.view=v;$('#tabMap').setAttribute('aria-selected',v==='map');$('#tabList').setAttribute('aria-selected',v==='list');if(v==='map')setTimeout(()=>map.invalidateSize(),50);}
 $('#tabMap').onclick=()=>setView('map');$('#tabList').onclick=()=>setView('list');$('#fab').onclick=openReport;
 
-function focusInc(id){selId=id;const i=db.incidents.find(x=>x.id===id);if(!i)return;setView('map');map.flyTo([i.lat,i.lng],14);
-  layer.eachLayer(l=>{const ll=l.getLatLng();if(Math.abs(ll.lat-i.lat)<1e-6&&Math.abs(ll.lng-i.lng)<1e-6)l.openPopup();});render();}
+function focusInc(id){selId=id;const i=db.incidents.find(x=>x.id===id);if(!i)return;setView('map');render();map.flyTo([i.lat,i.lng],14,{duration:.6});
+  layer.eachLayer(l=>{const ll=l.getLatLng();if(Math.abs(ll.lat-i.lat)<1e-6&&Math.abs(ll.lng-i.lng)<1e-6)l.openPopup();});}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pv]');if(!b)return;const [k,id]=b.dataset.pv.split(':');vote(id,k);map.closePopup();});
 $('#q').placeholder=t('search');$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
 $('#sort').onchange=e=>{sortBy=e.target.value;render();};
@@ -189,3 +189,7 @@ function drawLegend(){$('#legend').innerHTML=`<span><i class="ln s"></i>${t('ver
 const _al2=applyLang;applyLang=function(){_al2();drawLegend();};drawLegend();
 
 $('#range').onchange=e=>{rangeH=+e.target.value;render();};
+
+$('#list').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-open]')){e.preventDefault();focusInc(e.target.dataset.open);}});
+let lastFocus=null;document.addEventListener('click',e=>{const b=e.target.closest('#btnReport,#btnTrack,#fab');if(b)lastFocus=b;},true);
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{if(lastFocus&&document.contains(lastFocus))lastFocus.focus();}));

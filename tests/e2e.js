@@ -26,6 +26,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    await pg.type('#q',lang==='ar'?'حفرة':'pothole');await sleep(150);ok(await n()===1,'search finds 1');
    await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});ok(await n()===6,'search cleared');
    await pg.type('#q','zzzz');await sleep(100);ok((await pg.$$eval('#list .empty',e=>e.length))===1,'empty state');await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});
+   if(!mobile){await pg.focus('#list .inc');await pg.keyboard.press('Enter');await sleep(300);ok(await pg.$$eval('.leaflet-popup',e=>e.length)>0,'Enter on card opens map popup');await pg.keyboard.press('Escape');}
    // vote
    const before=await pg.$eval('#list .inc .meta span:last-child',e=>e.textContent);
    await pg.$eval('#list .inc button[data-v=c]',e=>e.scrollIntoView({block:'center'}));await pg.click('#list .inc button[data-v=c]');await sleep(100);
