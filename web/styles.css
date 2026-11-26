@@ -92,3 +92,16 @@ button{min-height:40px}
 .inc.res{opacity:.65}
 .emerg{max-width:1260px;margin:6px auto 0;padding:8px 14px;border:1px solid #FF5C6C55;background:#FF5C6C14;color:#FFC9CF;border-radius:12px;font-size:14px}@media(min-width:861px){.emerg{margin-inline:20px}}
 @media(min-width:1300px){.emerg{margin-inline:auto}}
+
+body{background:radial-gradient(1200px 500px at 80% -10%,#2DD4BF14,transparent),var(--ink)}
+.hero{position:relative}
+.radar{position:absolute;inset-inline-end:20px;top:20px;width:190px;height:190px;opacity:.9}
+.ping{transform-origin:100px 100px;animation:ping 2.6s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(9);opacity:0}}
+.hero h1,.hero p,.pillars{max-width:640px;margin-inline-end:auto}
+@media(max-width:1100px){.radar{display:none}}
+.inc{transition:border-color .15s,transform .15s}.inc:hover{transform:translateY(-1px)}
+.brand img{filter:drop-shadow(0 0 10px #2DD4BF55)}
+button.cta:hover{filter:brightness(1.08)}
+.chip:hover{border-color:var(--teal)}
+.acts{flex-wrap:wrap}.hero h1,.hero p,.pillars{margin-inline-end:0}
