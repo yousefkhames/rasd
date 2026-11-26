@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>رصد · Rasd — Anonymous verified incident reports</title>
 <meta name="description" content="Rasd: report civic incidents anonymously. Location is blurred, nothing identifies you, and the community verifies what is real.">
-<meta name="theme-color" content="#0B1220"><meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B1220"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https: http://localhost:* ; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer">
 <link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon-512.png"><link rel="manifest" href="manifest.webmanifest">
 <meta property="og:title" content="رصد · Rasd"><meta property="og:description" content="Anonymous, community-verified incident reports. No accounts, blurred locations."><meta property="og:image" content="https://yousefkhames.github.io/rasd/og.png"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
@@ -91,7 +91,7 @@
 <script src="vendor/leaflet.js" defer></script>
 <script src="core.js" defer></script>
 <script src="app.js" defer></script>
-<script>if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js");</script>
+<script src="sw-register.js" defer></script>
 <div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
