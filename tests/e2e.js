@@ -27,6 +27,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});ok(await n()===6,'search cleared');
    await pg.type('#q','zzzz');await sleep(100);ok((await pg.$$eval('#list .empty',e=>e.length))===1,'empty state');await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});
    if(!mobile){await pg.focus('#list .inc');await pg.keyboard.press('Enter');await sleep(300);ok(await pg.$$eval('.leaflet-popup',e=>e.length)>0,'Enter on card opens map popup');await pg.keyboard.press('Escape');}
+   await pg.click('#hideDemo');await sleep(100);ok(await n()===0,'hide demo samples -> 0');await pg.click('#hideDemo');ok(await n()===6,'show demo samples -> 6');
    // vote
    const before=await pg.$eval('#list .inc .meta span:last-child',e=>e.textContent);
    await pg.$eval('#list .inc button[data-v=c]',e=>e.scrollIntoView({block:'center'}));await pg.click('#list .inc button[data-v=c]');await sleep(100);
@@ -56,7 +57,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    await pg.evaluate(()=>document.querySelector('#dlgReport').close());
    await pg.goto('http://localhost:8123/#d1',{waitUntil:'load'});await sleep(1200);ok(await pg.$$eval('.leaflet-popup',e=>e.length)>0,'deep link #d1 opens its popup');
    // lang toggle
-   await pg.click('#btnLang').catch(()=>pg.evaluate(()=>document.querySelector('#btnLang').click()));await sleep(200);
+   await pg.evaluate(()=>window.scrollTo(0,0));await pg.evaluate(()=>document.querySelector('#btnLang').click());await sleep(400);
    ok(await pg.evaluate(()=>document.documentElement.lang)!==lang,'lang toggled');
    ok(errs.length===0,'no console errors: '+errs.join(' | '));
    if(process.env.SHOT)await pg.screenshot({path:`/tmp/qa-${name}-${lang}.png`});

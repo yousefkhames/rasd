@@ -123,3 +123,4 @@ button.cta:hover{filter:brightness(1.08)}
 .pop hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 .empty{color:var(--mut);text-align:center;padding:24px 8px;border:1px dashed var(--line);border-radius:14px}.tools{flex-wrap:wrap}.tools select{flex:1;min-width:110px}
 #prev{display:flex;gap:10px;align-items:center;margin-top:8px}#prev img{border-radius:8px;border:1px solid var(--line)}
+.demoB{border:1px solid var(--line);border-radius:99px;padding:0 8px;font-size:11px;color:var(--mut);font-weight:400}.demoT{font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center}.demoT input{width:auto}
