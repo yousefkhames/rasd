@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>رصد · Rasd — Anonymous verified incident reports</title>
 <meta name="description" content="Rasd: report civic incidents anonymously. Location is blurred, nothing identifies you, and the community verifies what is real.">
-<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B1220"><meta name="referrer" content="no-referrer">
 <link rel="icon" href="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="vendor/leaflet.css">
@@ -39,6 +39,8 @@
   </aside>
   <div id="map" role="region" aria-label="Incident map" tabindex="0"></div>
 </main>
+<div class="tabs" id="tabs" role="tablist"><button role="tab" id="tabMap" aria-selected="true" data-i="tMap"></button><button role="tab" id="tabList" aria-selected="false" data-i="tList"></button></div>
+<button class="fab" id="fab" data-i="reportPlus" aria-label="Report"></button>
 
 <dialog id="dlgReport" aria-labelledby="hReport">
   <form id="frm" method="dialog">

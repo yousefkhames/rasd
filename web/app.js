@@ -1,7 +1,7 @@
 const C = window.RasdCore;
 const $ = s => document.querySelector(s);
 const T = {
- ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
+ ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',tMap:'الخريطة',tList:'القايمة',reportPlus:'+ بلّغ',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
   sub:'رصد منصة بلاغات مجهولة للمشاكل في الشارع والحي. مفيش حساب ولا رقم تليفون ولا موقعك الدقيق. الثقة بتيجي من تأكيد ناس تانية مش من هويتك.',
   p1:'من غير حساب',p2:'الموقع مموّه ~500م',p3:'الصور بتتنضف من بياناتها',
   demo:'البيانات اللي على الخريطة تجريبية لعرض الفكرة. بلاغاتك هنا بتتحفظ على جهازك بس.',
@@ -14,7 +14,7 @@ const T = {
   cats:{road:'طرق وحفر',safety:'أمان الشارع',utilities:'مرافق (كهربا/مياه)',environment:'بيئة ونضافة',misconduct:'سوء سلوك أو إهمال',other:'أخرى'},
   all:'الكل',ver:'مؤكّد',pen:'قيد التأكيد',dis:'متنازع عليه',confirm:'شفته كمان',dispute:'مش صح',conf:'تأكيد',reports:'بلاغ',verified:'مؤكّد',pending:'قيد التأكيد',
   ago:'منذ',h:'ساعة',d:'يوم',voted:'سجّلنا رأيك',blockedText:'اتشال من النص بيانات شخصية'},
- en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
+ en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',tMap:'Map',tList:'List',reportPlus:'+ Report',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
   sub:'Rasd is an anonymous reporting map for street and neighborhood problems. No account, no phone number, no exact location. Trust comes from other people confirming, not from who you are.',
   p1:'No account',p2:'Location blurred ~500 m',p3:'Photos stripped of metadata',
   demo:'Reports on the map are demo data. Your reports here are saved on your device only.',
@@ -127,3 +127,7 @@ $('#tGo').onclick=async()=>{const id=(db.codes||{})[await C.sha256($('#tCode').v
   $('#tOut').innerHTML=i?`<div class="inc"><h3>${t('cats')[i.cat]}</h3><p>${esc(i.text)}</p><div class="meta"><span class="badge ${{verified:'b-ver',pending:'b-pen',disputed:'b-dis'}[C.status(i)]}">${t({verified:'ver',pending:'pen',disputed:'dis'}[C.status(i)])}</span><span>${C.score(i).conf} ${t('conf')}</span></div></div>`:t('notfound');};
 $('#btnLang').onclick=()=>{lang=lang==='ar'?'en':'ar';localStorage.setItem('rasd.lang',lang);applyLang();};
 initMap();applyLang();
+
+document.body.dataset.view='map';
+function setView(v){document.body.dataset.view=v;$('#tabMap').setAttribute('aria-selected',v==='map');$('#tabList').setAttribute('aria-selected',v==='list');if(v==='map')setTimeout(()=>map.invalidateSize(),50);}
+$('#tabMap').onclick=()=>setView('map');$('#tabList').onclick=()=>setView('list');$('#fab').onclick=openReport;
