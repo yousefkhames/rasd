@@ -39,13 +39,14 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    await pg.type('#fText','short');await pg.click('#frm button[type=submit]');await sleep(100);ok((await pg.$eval('#fErr',e=>e.textContent)).length>0,'inline error when no location/too short');await pg.$eval('#fText',e=>e.value='');
    await pg.type('#fText','Broken water pipe flooding the street near the market, call 01012345678');
    ok((await pg.$eval('#warn',e=>e.textContent)).length>0,'phone warning shown');
+   await (await pg.$('#fPhoto')).uploadFile(path.join(__dirname,'pixel.png'));await sleep(400);ok(!(await pg.$eval('#prev',e=>e.hidden)),'photo preview shown');
    const box=await (await pg.$('#pickMap')).boundingBox();await pg.mouse.click(box.x+box.width/2,box.y+box.height/2);await sleep(200);
    await pg.click('#frm button[type=submit]');await sleep(600);
    const code=await pg.$eval('#code',e=>e.textContent);ok(/^RASD-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(code),'code shown '+code);
    await pg.click('#doneClose');await sleep(100);
    if(mobile)await pg.click('#tabList');
    ok(await n()===7,'7 incidents after report');
-   const stored=await pg.evaluate(()=>localStorage.getItem('rasd.v1'));ok(!stored.includes('01012345678'),'phone not stored');ok(!stored.includes(code),'plain code not stored');
+   const stored=await pg.evaluate(()=>localStorage.getItem('rasd.v1'));ok(!stored.includes('01012345678'),'phone not stored');ok(stored.includes('data:image/jpeg;base64'),'photo stored as re-encoded jpeg');ok(!stored.includes(code),'plain code not stored');
    // track
    await pg.evaluate(()=>document.querySelector('#dlgTrack').showModal());await pg.type('#tCode',code);await pg.click('#tGo');await sleep(300);
    ok((await pg.$eval('#tOut',e=>e.innerHTML)).includes('inc'),'track finds report');await pg.click('#tClose');
