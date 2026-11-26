@@ -90,3 +90,5 @@ button{min-height:40px}
 .dots{letter-spacing:2px}.b-res{background:#93A1BD22;color:var(--mut)}
 .acts .sm{font-size:12px;padding:2px 8px;min-height:32px}
 .inc.res{opacity:.65}
+.emerg{max-width:1260px;margin:6px auto 0;padding:8px 14px;border:1px solid #FF5C6C55;background:#FF5C6C14;color:#FFC9CF;border-radius:12px;font-size:14px}@media(min-width:861px){.emerg{margin-inline:20px}}
+@media(min-width:1300px){.emerg{margin-inline:auto}}

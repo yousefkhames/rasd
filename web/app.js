@@ -1,8 +1,8 @@
 const C = window.RasdCore;
 const $ = s => document.querySelector(s);
 const T = {
- ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',tMap:'الخريطة',tList:'القايمة',reportPlus:'+ بلّغ',search:'دوّر في البلاغات',sortL:'ترتيب',sNew:'الأحدث',sConf:'الأكثر تأكيداً',sVer:'المؤكّد أولاً',geo:'📍 حدّد منطقتي (بالضغط فقط)',geoFail:'تعذّر تحديد موقعك. اضغط على الخريطة.',sevL:'درجة الخطورة',sev0:'بسيطة',sev1:'متوسطة',sev2:'خطيرة',res:'اتحلّت',resolveB:'اتصلّحت',flagB:'إبلاغ عن إساءة',wait:'استنى شوية قبل بلاغ تاني (5 دقايق)',review:'تحت المراجعة',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
-  sub:'رصد منصة بلاغات مجهولة للمشاكل في الشارع والحي. مفيش حساب ولا رقم تليفون ولا موقعك الدقيق. الثقة بتيجي من تأكيد ناس تانية مش من هويتك.',
+ ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',tMap:'الخريطة',tList:'القايمة',reportPlus:'+ بلّغ',search:'دوّر في البلاغات',sortL:'ترتيب',sNew:'الأحدث',sConf:'الأكثر تأكيداً',sVer:'المؤكّد أولاً',geo:'📍 حدّد منطقتي (بالضغط فقط)',geoFail:'تعذّر تحديد موقعك. اضغط على الخريطة.',sevL:'درجة الخطورة',sev0:'بسيطة',sev1:'متوسطة',sev2:'خطيرة',res:'اتحلّت',resolveB:'اتصلّحت',flagB:'إبلاغ عن إساءة',wait:'استنى شوية قبل بلاغ تاني (5 دقايق)',review:'تحت المراجعة',emerg:'حالة طارئة؟ رصد مش بديل للطوارئ. اتصل بالشرطة 122 أو الإسعاف 123 أو الحماية المدنية 180.',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرف إنت مين. والناس هي اللي تأكّد.',
+  sub:'رصد خريطة بلاغات مجهولة لمشاكل الشارع والحي: حفرة، نور مقطوع، مياه، زبالة. من غير حساب ولا رقم تليفون ولا موقعك بالظبط. الثقة مش جاية من هويتك، جاية من ناس تانية أكّدت نفس البلاغ.',
   p1:'من غير حساب',p2:'الموقع مموّه ~500م',p3:'الصور بتتنضف من بياناتها',
   demo:'البيانات اللي على الخريطة تجريبية لعرض الفكرة. بلاغاتك هنا بتتحفظ على جهازك بس.',
   newReport:'بلاغ جديد',cat:'نوع المشكلة',where:'المكان',whereHint:'اضغط على الخريطة. هنموّه المكان لمربع حوالي 500 متر قبل الحفظ.',what:'اللي حصل (من غير أسماء أشخاص)',photo:'صورة (اختياري)',photoHint:'بنمسح بيانات الصورة (الموقع والجهاز) ونصغّرها قبل الحفظ.',
@@ -13,8 +13,8 @@ const T = {
   foot:'رصد · مشروع مفتوح المصدر',
   cats:{road:'طرق وحفر',safety:'أمان الشارع',utilities:'مرافق (كهربا/مياه)',environment:'بيئة ونضافة',misconduct:'سوء سلوك أو إهمال',other:'أخرى'},
   all:'الكل',ver:'مؤكّد',pen:'قيد التأكيد',dis:'متنازع عليه',confirm:'شفته كمان',dispute:'مش صح',conf:'تأكيد',reports:'بلاغ',verified:'مؤكّد',pending:'قيد التأكيد',
-  ago:'منذ',h:'ساعة',d:'يوم',voted:'سجّلنا رأيك',blockedText:'اتشال من النص بيانات شخصية'},
- en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',tMap:'Map',tList:'List',reportPlus:'+ Report',search:'Search reports',sortL:'Sort',sNew:'Newest',sConf:'Most confirmed',sVer:'Verified first',geo:'📍 Use my area (only when you tap)',geoFail:'Could not get your location. Tap the map instead.',sevL:'Severity',sev0:'Minor',sev1:'Moderate',sev2:'Dangerous',res:'Resolved',resolveB:'Fixed now',flagB:'Flag abuse',wait:'Please wait a few minutes before another report (5 min)',review:'Under review',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
+  ago:'',h:'ساعة',d:'يوم',voted:'سجّلنا رأيك',blockedText:'اتشال من النص بيانات شخصية'},
+ en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',tMap:'Map',tList:'List',reportPlus:'+ Report',search:'Search reports',sortL:'Sort',sNew:'Newest',sConf:'Most confirmed',sVer:'Verified first',geo:'📍 Use my area (only when you tap)',geoFail:'Could not get your location. Tap the map instead.',sevL:'Severity',sev0:'Minor',sev1:'Moderate',sev2:'Dangerous',res:'Resolved',resolveB:'Fixed now',flagB:'Flag abuse',wait:'Please wait a few minutes before another report (5 min)',review:'Under review',emerg:'Emergency? Rasd is not an emergency service. In Egypt call police 122, ambulance 123, or civil protection 180.',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
   sub:'Rasd is an anonymous reporting map for street and neighborhood problems. No account, no phone number, no exact location. Trust comes from other people confirming, not from who you are.',
   p1:'No account',p2:'Location blurred ~500 m',p3:'Photos stripped of metadata',
   demo:'Reports on the map are demo data. Your reports here are saved on your device only.',
@@ -52,7 +52,8 @@ const save = () => localStorage.setItem(KEY, JSON.stringify(db));
 let filter = 'all', query = '', sortBy = 'new', selId = null;
 let filter0 = 'all', map, layer, pick, pickMarker;
 
-function ago(ts){const h=Math.max(1,Math.round((Date.now()-ts)/3600000));return h<48?(lang==='ar'?`${t('ago')} ${h} ${t('h')}`:`${h}${t('h')}`):(lang==='ar'?`${t('ago')} ${Math.round(h/24)} ${t('d')}`:`${Math.round(h/24)}${t('d')}`);}
+function nf(n){return new Intl.NumberFormat(lang==='ar'?'ar-EG':'en').format(n);}
+function ago(ts){const h=Math.max(1,Math.round((Date.now()-ts)/3600000)),r=new Intl.RelativeTimeFormat(lang==='ar'?'ar-EG':'en',{numeric:'auto'});return h<48?r.format(-h,'hour'):r.format(-Math.round(h/24),'day');}
 function loc(s){const p=s.split(' / ');return p.length===2?(lang==='ar'?p[0]:p[1]):s;}
 function esc(s){s=loc(s);return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
@@ -71,12 +72,12 @@ function render(){
   $('#filters').innerHTML=['all',...C.CATS].map(c=>`<button class="chip ${c===filter?'on':''}" aria-pressed="${c===filter}" data-c="${c}">${c==='all'?t('all'):t('cats')[c]}</button>`).join('');
   $('#filters').onclick=e=>{const c=e.target.dataset.c;if(c){filter=c;render();}};
   const v=all.filter(i=>C.status(i)==='verified').length;
-  $('#stats').innerHTML=`<div><b>${all.length}</b>${t('reports')}</div><div><b>${v}</b>${t('verified')}</div><div><b>${all.length-v}</b>${t('pending')}</div>`;
+  $('#stats').innerHTML=`<div><b>${nf(all.length)}</b>${t('reports')}</div><div><b>${nf(v)}</b>${t('verified')}</div><div><b>${nf(all.length-v)}</b>${t('pending')}</div>`;
   $('#list').innerHTML=list.map(i=>{const s=C.status(i),sc=C.score(i),b={verified:['b-ver',t('ver')],pending:['b-pen',t('pen')],disputed:['b-dis',t('dis')],resolved:['b-res',t('res')],hidden:['b-dis',t('review')]}[s];
    const mine=db.mine[i.id]?.vote;
    return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${i.img?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
-   <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${sc.conf} ${t('conf')} · ${ago(i.ts)}</span></div>
+   <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${nf(sc.conf)} ${t('conf')} · ${ago(i.ts)}</span></div>
    <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button><button class="sm" data-v="r" data-id="${i.id}" ${db.mine[i.id]?.res?'disabled':''}>🔧 ${t('resolveB')}</button><button class="sm" data-v="f" data-id="${i.id}" ${db.mine[i.id]?.flag?'disabled':''}>⚑ ${t('flagB')}</button></div></article>`}).join('');
   $('#list').onclick=e=>{const b=e.target.closest('button[data-v]');if(b){vote(b.dataset.id,b.dataset.v);return;}const c=e.target.closest('[data-open]');if(c)focusInc(c.dataset.open);};
   layer.clearLayers();
