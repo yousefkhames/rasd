@@ -130,7 +130,7 @@ $('#frm').addEventListener('submit',async e=>{
   const code=C.randomCode(),id='r'+Date.now().toString(36);
   localStorage.setItem('rasd.last',Date.now());
   db.incidents.push({id,cat:$('#fCat').value,sev:+(document.querySelector('input[name=sev]:checked')?.value??1),resolves:[],flags:[],...b,text,ts:C.hourBucket(Date.now()),confirms:[],disputes:[],photo:img?1:0,img});
-  db.mine[id]={vote:'c'};db.mine[code]=null;
+  db.mine[id]={vote:"c"};
   db.codes=db.codes||{};db.codes[await C.sha256(code)]=id; // only the hash of the code is stored
   let shown=code;
   if(typeof API_OK!=='undefined'&&API_OK){try{const r=await api('/api/incidents',{method:'POST',body:JSON.stringify({cat:$('#fCat').value,lat:b.lat,lng:b.lng,text,sev:+(document.querySelector('input[name=sev]:checked')?.value??1),photo:!!img})});shown=r.code;db.incidents=db.incidents.filter(x=>x.id!==id);syncApi();}catch{}}
