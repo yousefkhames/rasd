@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>رصد · Rasd — Anonymous verified incident reports</title>
+<meta name="description" content="Rasd: report civic incidents anonymously. Location is blurred, nothing identifies you, and the community verifies what is real.">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#"><img src="logo.svg" alt="" width="36" height="36"><span><b>رصد</b> <i>Rasd</i></span></a>
+  <nav>
+    <button id="btnLang" class="ghost">EN</button>
+    <button id="btnTrack" class="ghost" data-i="track"></button>
+    <button id="btnReport" class="cta" data-i="report"></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1 data-i="h1"></h1>
+  <p data-i="sub"></p>
+  <ul class="pillars">
+    <li data-i="p1"></li><li data-i="p2"></li><li data-i="p3"></li>
+  </ul>
+</section>
+
+<main class="layout">
+  <aside class="panel">
+    <div class="filters" id="filters"></div>
+    <div class="stats" id="stats"></div>
+    <div id="list"></div>
+    <p class="demo" data-i="demo"></p>
+  </aside>
+  <div id="map" aria-label="map"></div>
+</main>
+
+<dialog id="dlgReport">
+  <form id="frm" method="dialog">
+    <h2 data-i="newReport"></h2>
+    <label><span data-i="cat"></span><select id="fCat"></select></label>
+    <label><span data-i="where"></span>
+      <div id="pickMap"></div>
+      <small data-i="whereHint"></small>
+    </label>
+    <label><span data-i="what"></span><textarea id="fText" rows="4" maxlength="500"></textarea>
+      <small id="warn" class="warn"></small></label>
+    <label><span data-i="photo"></span><input type="file" id="fPhoto" accept="image/*"><small data-i="photoHint"></small></label>
+    <div class="row"><button type="button" class="ghost" id="cancel" data-i="cancel"></button><button type="submit" class="cta" data-i="submit"></button></div>
+  </form>
+</dialog>
+
+<dialog id="dlgDone">
+  <h2 data-i="sent"></h2>
+  <p data-i="codeInfo"></p>
+  <div class="code" id="code"></div>
+  <p class="small" data-i="codeWarn"></p>
+  <button class="cta" id="doneClose" data-i="ok"></button>
+</dialog>
+
+<dialog id="dlgTrack">
+  <h2 data-i="track"></h2>
+  <input id="tCode" placeholder="RASD-XXXX-XXXX" dir="ltr">
+  <div id="tOut"></div>
+  <div class="row"><button class="ghost" id="tClose" data-i="close"></button><button class="cta" id="tGo" data-i="check"></button></div>
+</dialog>
+
+<section class="how">
+  <h2 data-i="howT"></h2>
+  <div class="cards" id="how"></div>
+</section>
+<footer><span data-i="foot"></span> · <a href="https://github.com/" id="gh" rel="noopener">GitHub</a></footer>
+<script src="vendor/leaflet.js"></script>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
