@@ -1,7 +1,7 @@
 const C = window.RasdCore;
 const $ = s => document.querySelector(s);
 const T = {
- ar: {dir:'rtl',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
+ ar: {dir:'rtl',skip:'تخطّى للمحتوى',codeLabel:'كود البلاغ',report:'بلّغ',track:'تابع بلاغك',h1:'بلّغ من غير ما حد يعرفك. والناس تأكّد اللي حصل فعلاً.',
   sub:'رصد منصة بلاغات مجهولة للمشاكل في الشارع والحي. مفيش حساب ولا رقم تليفون ولا موقعك الدقيق. الثقة بتيجي من تأكيد ناس تانية مش من هويتك.',
   p1:'من غير حساب',p2:'الموقع مموّه ~500م',p3:'الصور بتتنضف من بياناتها',
   demo:'البيانات اللي على الخريطة تجريبية لعرض الفكرة. بلاغاتك هنا بتتحفظ على جهازك بس.',
@@ -14,7 +14,7 @@ const T = {
   cats:{road:'طرق وحفر',safety:'أمان الشارع',utilities:'مرافق (كهربا/مياه)',environment:'بيئة ونضافة',misconduct:'سوء سلوك أو إهمال',other:'أخرى'},
   all:'الكل',ver:'مؤكّد',pen:'قيد التأكيد',dis:'متنازع عليه',confirm:'شفته كمان',dispute:'مش صح',conf:'تأكيد',reports:'بلاغ',verified:'مؤكّد',pending:'قيد التأكيد',
   ago:'منذ',h:'ساعة',d:'يوم',voted:'سجّلنا رأيك',blockedText:'اتشال من النص بيانات شخصية'},
- en: {dir:'ltr',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
+ en: {dir:'ltr',skip:'Skip to content',codeLabel:'Report code',report:'Report',track:'Track a report',h1:'Report without being known. The community confirms what is real.',
   sub:'Rasd is an anonymous reporting map for street and neighborhood problems. No account, no phone number, no exact location. Trust comes from other people confirming, not from who you are.',
   p1:'No account',p2:'Location blurred ~500 m',p3:'Photos stripped of metadata',
   demo:'Reports on the map are demo data. Your reports here are saved on your device only.',
@@ -56,6 +56,7 @@ function loc(s){const p=s.split(' / ');return p.length===2?(lang==='ar'?p[0]:p[1
 function esc(s){s=loc(s);return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
 function applyLang(){
+  $('#map').setAttribute('aria-label',lang==='ar'?'خريطة البلاغات':'Incident map');
   document.documentElement.lang=lang;document.documentElement.dir=t('dir');
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
   $('#btnLang').textContent=lang==='ar'?'EN':'عربي';
@@ -65,13 +66,13 @@ function applyLang(){
 }
 function render(){
   const all=db.incidents, list=all.filter(i=>filter==='all'||i.cat===filter).sort((a,b)=>b.ts-a.ts);
-  $('#filters').innerHTML=['all',...C.CATS].map(c=>`<button class="chip ${c===filter?'on':''}" data-c="${c}">${c==='all'?t('all'):t('cats')[c]}</button>`).join('');
+  $('#filters').innerHTML=['all',...C.CATS].map(c=>`<button class="chip ${c===filter?'on':''}" aria-pressed="${c===filter}" data-c="${c}">${c==='all'?t('all'):t('cats')[c]}</button>`).join('');
   $('#filters').onclick=e=>{const c=e.target.dataset.c;if(c){filter=c;render();}};
   const v=all.filter(i=>C.status(i)==='verified').length;
   $('#stats').innerHTML=`<div><b>${all.length}</b>${t('reports')}</div><div><b>${v}</b>${t('verified')}</div><div><b>${all.length-v}</b>${t('pending')}</div>`;
   $('#list').innerHTML=list.map(i=>{const s=C.status(i),sc=C.score(i),b={verified:['b-ver',t('ver')],pending:['b-pen',t('pen')],disputed:['b-dis',t('dis')]}[s];
    const mine=db.mine[i.id]?.vote;
-   return `<article class="inc"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]}</h3>${i.img?`<img src="${i.img}" alt="">`:''}<p>${esc(i.text)}</p>
+   return `<article class="inc"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]}</h3>${i.img?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
    <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${sc.conf} ${t('conf')} · ${ago(i.ts)}</span></div>
    <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button></div></article>`}).join('');

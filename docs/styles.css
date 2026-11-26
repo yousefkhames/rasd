@@ -50,3 +50,10 @@ footer{text-align:center;color:var(--mut);padding:30px;font-size:13px}footer a{c
 .leaflet-container{background:#0d1626}
 @media(max-width:860px){.layout{grid-template-columns:1fr}.panel{max-height:none;order:2}#map{height:420px}}
 .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6)}
+
+.skip{position:absolute;inset-inline-start:8px;top:-60px;background:var(--amber);color:#201400;padding:8px 14px;border-radius:8px;z-index:2000;font-weight:800}
+.skip:focus{top:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
