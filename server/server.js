@@ -4,13 +4,13 @@ const C = require('../web/core.js');
 const FILE = process.env.RASD_DB || path.join(__dirname, 'data.json');
 const db = fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE, 'utf8')) : { incidents: [], codes: {} };
 const save = () => fs.writeFileSync(FILE, JSON.stringify(db));
-const pub = i => ({ id: i.id, cat: i.cat, lat: i.lat, lng: i.lng, text: i.text, ts: i.ts, photo: i.photo, sev: i.sev || 1, status: C.status(i), score: C.score(i) });
+const pub = i => ({ id: i.id, cat: i.cat, lat: i.lat, lng: i.lng, text: i.text, ts: i.ts, photo: i.photo, sev: i.sev ?? 1, nres: (i.resolves || []).length, nflag: (i.flags || []).length, nconf: i.confirms.length, ndis: i.disputes.length, status: C.status(i), score: C.score(i) });
 const body = req => new Promise(r => { let b = ''; req.on('data', c => (b += c, b.length > 2e5 && req.destroy())); req.on('end', () => r(JSON.parse(b || '{}'))); });
-const send = (res, code, o) => { res.writeHead(code, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'cache-control': 'no-store' }); res.end(JSON.stringify(o)); };
+const send = (res, code, o) => { res.writeHead(code, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'cache-control': 'no-store' }); res.end(JSON.stringify(o)); };
 
 const server = http.createServer(async (req, res) => {
   try {
-    if (req.method === 'OPTIONS') return send(res, 204, {});
+    if (req.method === 'OPTIONS') return (res.writeHead(204, { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type', 'access-control-allow-methods': 'GET,POST,OPTIONS' }), res.end());
     const u = new URL(req.url, 'http://x');
     if (req.method === 'GET' && u.pathname === '/api/incidents') return send(res, 200, db.incidents.map(pub));
     if (req.method === 'POST' && u.pathname === '/api/incidents') {
