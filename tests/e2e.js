@@ -21,9 +21,11 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    // filter
    await pg.click('#filters .chip[data-c=road]');await sleep(100);ok(await n()===1,'filter road -> 1');
    await pg.click('#filters .chip[data-c=all]');ok(await n()===6,'filter all -> 6');
+   await pg.select('#range','24');await sleep(100);ok(await n()<6,'24h range narrows');await pg.select('#range','0');
    // search
    await pg.type('#q',lang==='ar'?'حفرة':'pothole');await sleep(150);ok(await n()===1,'search finds 1');
    await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});ok(await n()===6,'search cleared');
+   await pg.type('#q','zzzz');await sleep(100);ok((await pg.$$eval('#list .empty',e=>e.length))===1,'empty state');await pg.$eval('#q',e=>{e.value='';e.dispatchEvent(new Event('input'))});
    // vote
    const before=await pg.$eval('#list .inc .meta span:last-child',e=>e.textContent);
    await pg.$eval('#list .inc button[data-v=c]',e=>e.scrollIntoView({block:'center'}));await pg.click('#list .inc button[data-v=c]');await sleep(100);
