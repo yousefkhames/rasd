@@ -66,6 +66,7 @@ tests/e2e.js      real-browser click-through tests
 
 - The live demo is **local-first**: reports are saved in your browser, and the sample incidents on the map are demo data.
 - Anonymous voting can be gamed by one person with many devices. Next steps: proof-of-work per vote, location-gated voting ("I am near this"), moderator review.
+- Personal-data masking is pattern based (emails, Egyptian mobile numbers, 14-digit IDs, long digit runs, also in Arabic digits or with spaces and dashes). It will miss names and addresses typed in words.
 - Rasd cannot stop false or harmful text. Abuse flags and auto-hide help but do not replace human review.
 - It is not an emergency service and does not forward reports to authorities. In Egypt: police 122, ambulance 123, civil protection 180.
 

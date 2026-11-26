@@ -16,9 +16,18 @@
     let hits = 0;
     const rep = (re, s) => { text = text.replace(re, m => { hits++; return s; }); };
     rep(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[email removed]');
-    rep(/(?<!\d)(?:\+?20|0)?1[0125]\d{8}(?!\d)/g, '[phone removed]');
-    rep(/(?<!\d)[23]\d{13}(?!\d)/g, '[ID removed]');
-    rep(/(?<!\d)\d{9,}(?!\d)/g, '[number removed]');
+    // Digit runs, also with spaces, dashes or brackets between groups and in Arabic-Indic or Persian digits.
+    const norm = x => x.replace(/[٠-٩]/g, d => d.charCodeAt(0) - 1632).replace(/[۰-۹]/g, d => d.charCodeAt(0) - 1776);
+    const D = '[\\d٠-٩۰-۹]';
+    const run = new RegExp('(?<!' + D + ')\\+?' + D + '(?:[ \\-()]{0,2}' + D + '){8,}(?!' + D + ')', 'g');
+    text = text.replace(run, m => {
+      const n = norm(m), d = n.replace(/\D/g, ''), sep = /[^\d٠-٩۰-۹+]/.test(m);
+      if (sep && (d.length < 10 || /^\d{4}-\d{2}-\d{2}/.test(n))) return m; // short or a plain date: leave alone
+      hits++;
+      if (/^(?:00?20|20|0)?1[0125]\d{8}$/.test(d)) return '[phone removed]';
+      if (d.length === 14 && /^[23]/.test(d)) return '[ID removed]';
+      return '[number removed]';
+    });
     return { text, hits };
   }
 
