@@ -12,6 +12,15 @@
 
 </div>
 
+## Screenshots
+
+Captured from the live site (https://yousefkhames.github.io/rasd/).
+
+<p>
+  <img src="docs/screenshots/live-desktop.png" alt="rasd desktop view" width="640">
+  <img src="docs/screenshots/live-mobile.png" alt="rasd mobile view" width="200">
+</p>
+
 ## Why
 
 Reporting a pothole, a dead street light, a water cut or contractor neglect should not require handing over your name, phone number or exact home area. But anonymous reports are easy to fake. Rasd explores how to get **trust without identity**: other people confirm or dispute a report, and the app protects the reporter by design.
