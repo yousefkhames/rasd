@@ -57,8 +57,9 @@
     </label>
     <fieldset class="sev"><legend data-i="sevL"></legend><label><input type="radio" name="sev" value="0"> <span data-i="sev0"></span></label><label><input type="radio" name="sev" value="1" checked> <span data-i="sev1"></span></label><label><input type="radio" name="sev" value="2"> <span data-i="sev2"></span></label></fieldset>
     <label><span data-i="what"></span><textarea id="fText" rows="4" maxlength="500"></textarea>
-      <small id="warn" class="warn" role="alert"></small></label>
+      <small id="warn" class="warn" role="alert"></small><small id="cnt" class="small"></small></label>
     <label><span data-i="photo"></span><input type="file" id="fPhoto" accept="image/*"><small data-i="photoHint"></small></label>
+    <p id="fErr" class="warn" role="alert"></p>
     <div class="row"><button type="button" class="ghost" id="cancel" data-i="cancel"></button><button type="submit" class="cta" data-i="submit"></button></div>
   </form>
 </dialog>
@@ -91,5 +92,6 @@
 <script src="core.js" defer></script>
 <script src="app.js" defer></script>
 <script>if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js");</script>
+<div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

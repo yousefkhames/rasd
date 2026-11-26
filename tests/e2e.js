@@ -33,6 +33,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    // report flow
    if(mobile){await pg.click('#fab');}else await pg.click('#btnReport');
    await sleep(400);
+   await pg.type('#fText','short');await pg.click('#frm button[type=submit]');await sleep(100);ok((await pg.$eval('#fErr',e=>e.textContent)).length>0,'inline error when no location/too short');await pg.$eval('#fText',e=>e.value='');
    await pg.type('#fText','Broken water pipe flooding the street near the market, call 01012345678');
    ok((await pg.$eval('#warn',e=>e.textContent)).length>0,'phone warning shown');
    const box=await (await pg.$('#pickMap')).boundingBox();await pg.mouse.click(box.x+box.width/2,box.y+box.height/2);await sleep(200);
@@ -47,7 +48,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    ok((await pg.$eval('#tOut',e=>e.innerHTML)).includes('inc'),'track finds report');await pg.click('#tClose');
    // second report blocked by rate limit
    await pg.evaluate(()=>document.querySelector('#dlgReport').showModal());await pg.type('#fText','Second report immediately after the first');
-   await pg.click('#frm button[type=submit]');await sleep(200);ok(await n()===7,'rate limit blocks second');
+   await pg.click('#frm button[type=submit]');await sleep(200);ok(await n()===7,'rate limit blocks second');ok((await pg.$eval('#fErr',e=>e.textContent)).length>0,'rate limit message shown');
    await pg.evaluate(()=>document.querySelector('#dlgReport').close());
    // lang toggle
    await pg.click('#btnLang').catch(()=>pg.evaluate(()=>document.querySelector('#btnLang').click()));await sleep(200);

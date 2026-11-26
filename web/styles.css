@@ -112,3 +112,7 @@ button.cta:hover{filter:brightness(1.08)}
 #faq summary{cursor:pointer;font-weight:600}#faq p{color:var(--mut);margin:8px 0 2px}
 .lim{color:var(--mut);padding-inline-start:20px}.lim li{margin-bottom:6px}
 @media(max-width:560px){.bar2{grid-template-columns:100px 1fr 30px}}
+
+#toast{position:fixed;inset-inline:0;bottom:90px;margin:auto;width:max-content;max-width:88vw;background:var(--ink2);border:1px solid var(--teal);color:var(--txt);padding:10px 18px;border-radius:12px;z-index:3000;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
+#toast.on{opacity:1;transform:none}
+#fErr{margin:0 0 8px;min-height:1.2em}
