@@ -53,6 +53,7 @@ let fails=[];const ok=(c,m)=>{if(!c){fails.push(m);console.log('  FAIL',m);}};
    await pg.evaluate(()=>document.querySelector('#dlgReport').showModal());await pg.type('#fText','Second report immediately after the first');
    await pg.click('#frm button[type=submit]');await sleep(200);ok(await n()===7,'rate limit blocks second');ok((await pg.$eval('#fErr',e=>e.textContent)).length>0,'rate limit message shown');
    await pg.evaluate(()=>document.querySelector('#dlgReport').close());
+   await pg.goto('http://localhost:8123/#d1',{waitUntil:'load'});await sleep(1200);ok(await pg.$$eval('.leaflet-popup',e=>e.length)>0,'deep link #d1 opens its popup');
    // lang toggle
    await pg.click('#btnLang').catch(()=>pg.evaluate(()=>document.querySelector('#btnLang').click()));await sleep(200);
    ok(await pg.evaluate(()=>document.documentElement.lang)!==lang,'lang toggled');

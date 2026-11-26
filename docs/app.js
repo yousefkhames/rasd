@@ -84,8 +84,8 @@ function render(){
    return `<article class="inc ${s==='resolved'?'res':''} ${i.id===selId?'sel':''}" data-open="${i.id}" tabindex="0" aria-label="${t('cats')[i.cat]}: ${esc(i.text).slice(0,80)}"><h3 style="color:${COL[i.cat]}">${t('cats')[i.cat]} <span class="dots" title="${t('sev'+(i.sev??1))}" aria-label="${t('sev'+(i.sev??1))}">${'●'.repeat((i.sev??1)+1)}</span></h3>${/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(i.img||'')?`<img src="${i.img}" alt="${lang==='ar'?'صورة مرفقة بالبلاغ':'Photo attached to the report'}">`:''}<p>${esc(i.text)}</p>
    <div class="bar"><i style="width:${Math.min(100,Math.max(0,sc.value/C.VERIFY_AT*100))}%"></i></div>
    <div class="meta"><span class="badge ${b[0]}">${b[1]}</span><span>${nf(sc.conf)} ${t('conf')} · ${ago(i.ts)}</span></div>
-   <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button><button class="sm" data-v="r" data-id="${i.id}" ${db.mine[i.id]?.res?'disabled':''}>${t('resolveB')}</button><button class="sm" data-v="f" data-id="${i.id}" ${db.mine[i.id]?.flag?'disabled':''}>⚑ ${t('flagB')}</button></div></article>`}).join(''):`<p class="empty">${t('none')}</p>`;
-  $('#list').onclick=e=>{const b=e.target.closest('button[data-v]');if(b){vote(b.dataset.id,b.dataset.v);return;}const c=e.target.closest('[data-open]');if(c)focusInc(c.dataset.open);};
+   <div class="acts" style="margin-top:8px"><button data-v="c" data-id="${i.id}" ${mine?'disabled':''}>✓ ${t('confirm')}</button><button data-v="d" data-id="${i.id}" ${mine?'disabled':''}>✗ ${t('dispute')}</button><button class="sm" data-v="r" data-id="${i.id}" ${db.mine[i.id]?.res?'disabled':''}>${t('resolveB')}</button><button class="sm" data-v="f" data-id="${i.id}" ${db.mine[i.id]?.flag?'disabled':''}>⚑ ${t('flagB')}</button><button class="sm" data-v="s" data-id="${i.id}">${t('share')}</button></div></article>`}).join(''):`<p class="empty">${t('none')}</p>`;
+  $('#list').onclick=e=>{const b=e.target.closest('button[data-v]');if(b){if(b.dataset.v==='s'){const u=location.origin+location.pathname+'#'+b.dataset.id;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast(t('copied'))).catch(()=>toast(u));return;}vote(b.dataset.id,b.dataset.v);return;}const c=e.target.closest('[data-open]');if(c)focusInc(c.dataset.open);};
   const cnt=C.CATS.map(c=>[c,all.filter(i=>i.cat===c).length]),mx=Math.max(1,...cnt.map(x=>x[1]));
   $('#bars').innerHTML=cnt.map(([c,n])=>`<div class="bar2"><span>${t('cats')[c]}</span><div class="tr"><i style="width:${n/mx*100}%;background:${COL[c]}"></i></div><b>${nf(n)}</b></div>`).join('');
   layer.clearLayers();
@@ -198,3 +198,6 @@ $('#fPhoto').onchange=async e=>{const f=e.target.files[0];if(!f){$('#prev').hidd
   if(!f.type.startsWith('image/')||f.size>8e6){e.target.value='';$('#prev').hidden=true;$('#fErr').textContent=t('badImg');return;}
   $('#fErr').textContent='';$('#prevImg').src=await stripPhoto(f)||'';$('#prev').hidden=false;}; // preview shows the already-stripped image
 $('#prevX').onclick=()=>{$('#fPhoto').value='';$('#prev').hidden=true;};
+
+function openHash(){const id=decodeURIComponent(location.hash.slice(1));if(id&&db.incidents.some(x=>x.id===id))setTimeout(()=>focusInc(id),400);}
+addEventListener('hashchange',openHash);openHash();
