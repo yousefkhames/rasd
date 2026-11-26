@@ -105,3 +105,10 @@ body{background:radial-gradient(1200px 500px at 80% -10%,#2DD4BF14,transparent),
 button.cta:hover{filter:brightness(1.08)}
 .chip:hover{border-color:var(--teal)}
 .acts{flex-wrap:wrap}.hero h1,.hero p,.pillars{margin-inline-end:0}
+
+.bars{display:grid;gap:8px}.bar2{display:grid;grid-template-columns:150px 1fr 40px;gap:10px;align-items:center;font-size:14px}
+.bar2 i{display:block;height:10px;border-radius:9px;min-width:4px}.bar2 .tr{background:var(--ink2);border-radius:9px;overflow:hidden}
+#faq details{background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+#faq summary{cursor:pointer;font-weight:600}#faq p{color:var(--mut);margin:8px 0 2px}
+.lim{color:var(--mut);padding-inline-start:20px}.lim li{margin-bottom:6px}
+@media(max-width:560px){.bar2{grid-template-columns:100px 1fr 30px}}
