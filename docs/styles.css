@@ -116,3 +116,8 @@ button.cta:hover{filter:brightness(1.08)}
 #toast{position:fixed;inset-inline:0;bottom:90px;margin:auto;width:max-content;max-width:88vw;background:var(--ink2);border:1px solid var(--teal);color:var(--txt);padding:10px 18px;border-radius:12px;z-index:3000;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
 #toast.on{opacity:1;transform:none}
 #fErr{margin:0 0 8px;min-height:1.2em}
+
+.cnt{background:#0B1220cc!important;color:#fff!important;border:1px solid var(--teal)!important;font-weight:800;box-shadow:none!important}.cnt:before{display:none!important}
+.legend{background:#0B1220cc;border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;color:var(--txt);display:flex;gap:12px}
+.legend .ln{display:inline-block;width:18px;height:0;border-top:3px solid var(--teal);vertical-align:middle;margin-inline-end:6px}.legend .ln.d{border-top:2px dashed var(--amber)}
+.pop hr{border:0;border-top:1px solid var(--line);margin:8px 0}

@@ -89,8 +89,11 @@ function render(){
   const cnt=C.CATS.map(c=>[c,all.filter(i=>i.cat===c).length]),mx=Math.max(1,...cnt.map(x=>x[1]));
   $('#bars').innerHTML=cnt.map(([c,n])=>`<div class="bar2"><span>${t('cats')[c]}</span><div class="tr"><i style="width:${n/mx*100}%;background:${COL[c]}"></i></div><b>${nf(n)}</b></div>`).join('');
   layer.clearLayers();
-  list.forEach(i=>{const s=C.status(i);
-    L.circle([i.lat,i.lng],{radius:C.GRID*111000*0.7,color:COL[i.cat],weight:s==='verified'?3:1,fillOpacity:s==='verified'?.35:.15,dashArray:s==='pending'?'4':null}).addTo(layer).on('click',()=>{selId=i.id;}).bindPopup(`<div class="pop"><b>${t('cats')[i.cat]}</b><br>${esc(i.text)}<br><button data-pv="c:${i.id}">✓ ${t('confirm')}</button><button data-pv="d:${i.id}">✗ ${t('dispute')}</button></div>`);});
+  const cells={};list.forEach(i=>{(cells[i.lat+','+i.lng]=cells[i.lat+','+i.lng]||[]).push(i);});
+  Object.values(cells).forEach(g=>{const i=g[0],s=C.status(i),v=g.some(x=>C.status(x)==='verified');
+    const pop=g.map(x=>`<div class="pop"><b>${t('cats')[x.cat]}</b><br>${esc(x.text)}<br><button data-pv="c:${x.id}">✓ ${t('confirm')}</button><button data-pv="d:${x.id}">✗ ${t('dispute')}</button></div>`).join('<hr>');
+    const c=L.circle([i.lat,i.lng],{radius:C.GRID*111000*0.7,color:COL[i.cat],weight:v?3:1,fillOpacity:v?.35:.15,dashArray:s==='pending'?'4':null}).addTo(layer).on('click',()=>{selId=i.id;}).bindPopup(pop,{maxHeight:260});
+    if(g.length>1)c.bindTooltip(String(nf(g.length)),{permanent:true,direction:'center',className:'cnt'});});
 }
 var vote=function(id,kind){
   const i=db.incidents.find(x=>x.id===id);if(!i)return;const m=db.mine[id]||(db.mine[id]={});
@@ -180,3 +183,7 @@ modeLabel();
 
 function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3500);}
 $('#fText').addEventListener('input',e=>{$('#cnt').textContent=e.target.value.length+'/500';});
+
+const legend=L.control({position:'bottomleft'});legend.onAdd=()=>{const d=L.DomUtil.create('div','legend');d.id='legend';return d;};legend.addTo(map);
+function drawLegend(){$('#legend').innerHTML=`<span><i class="ln s"></i>${t('ver')}</span><span><i class="ln d"></i>${t('pen')}</span>`;}
+const _al2=applyLang;applyLang=function(){_al2();drawLegend();};drawLegend();
