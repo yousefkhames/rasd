@@ -82,3 +82,10 @@ tests/e2e.js      real-browser click-through tests
 ## License
 
 MIT, see [LICENSE](LICENSE). Built by [Yousef Khames](https://www.linkedin.com/in/yousef-khames-elasuoty).
+
+
+## Demo / portfolio project
+
+Static GitHub Pages site. Data stays in your browser. Sample data is fictional and results are not professional, legal, medical or financial advice.
+
+By Yousef Khames · من تطوير يوسف خميس
